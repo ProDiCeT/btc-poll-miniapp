@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC: Bear or Bull? 🐻🐂</title>
+    
+    <!-- Farcaster Mini App Meta Tags -->
+    <meta property="fc:frame" content='{"version":"next","imageUrl":"https://i.imgur.com/btc-poll-preview.png","button":{"title":"Vote Now 🗳️","action":{"type":"launch_frame","name":"BTC Market Sentiment","url":"https://your-domain.vercel.app","splashImageUrl":"https://i.imgur.com/btc-logo.png","splashBackgroundColor":"#1a1a2e"}}}'>
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="BTC: Bear or Bull? 🐻🐂">
+    <meta property="og:description" content="Vote on Bitcoin market sentiment">
+    <meta property="og:image" content="https://i.imgur.com/btc-poll-preview.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 48px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 4px 12px rgba(247, 147, 26, 0.4));
+        }
+        
+        h1 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .user-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .poll-container {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+        
+        .question {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .vote-btn {
+            padding: 24px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .vote-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .vote-btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .bear-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .bear-btn:hover {
+            border-color: #fca5a5;
+        }
+        
+        .bull-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+        }
+        
+        .bull-btn:hover {
+            border-color: #86efac;
+        }
+        
+        .btn-label {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .results {
+            display: none;
+            margin-top: 24px;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .result-bar {
+            margin-bottom: 20px;
+        }
+        
+        .result-label {
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            transition: width 0.8s ease;
+            font-size: 14px;
+        }
+        
+        .bear-bar {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .bull-bar {
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        .total-votes {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            margin-top: 24px;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">₿</div>
+            <h1>Bitcoin Market Sentiment</h1>
+            <div class="subtitle">What's your prediction?</div>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <img class="user-avatar" id="userAvatar" src="" alt="User">
+                <span class="user-name" id="userName">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="poll-container">
+            <div class="question">🐻 BEAR or BULL 🐂 ?</div>
+            
+            <div class="buttons" id="voteButtons">
+                <button class="vote-btn bear-btn" onclick="vote('bear')">
+                    🐻
+                    <span class="btn-label">BEAR</span>
+                </button>
+                <button class="vote-btn bull-btn" onclick="vote('bull')">
+                    🐂
+                    <span class="btn-label">BULL</span>
+                </button>
+            </div>
+            
+            <div class="results" id="results">
+                <div class="result-bar">
+                    <div class="result-label">
+                        <span>🐻 BEAR</span>
+                        <span id="bearPercent">0%</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill bear-bar" id="bearBar" style="width: 0%">
+                            <span id="bearVotes">0 votes</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-bar">
+                    <div class="result-label">
+                        <span>🐂 BULL</span>
+                        <span id="bullPercent">0%</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill bull-bar" id="bullBar" style="width: 0%">
+                            <span id="bullVotes">0 votes</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="total-votes" id="totalVotes">
+                    Total: 0 votes
+                </div>
+            </div>
+        </div>
+        
+        <div class="info">
+            📊 Vote to share your sentiment on the BTC market<br>
+            Results are updated in real-time
+        </div>
+    </div>
+    
+    <!-- Farcaster Mini App SDK -->
+    <script type="module">
+        import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk';
+        
+        // Données de vote (en mémoire pour la démo)
+        let votes = {
+            bear: 42,
+            bull: 58
+        };
+        
+        // Charger les votes sauvegardés
+        function loadVotes() {
+            const saved = localStorage.getItem('btc_poll_votes');
+            if (saved) {
+                votes = JSON.parse(saved);
+            }
+        }
+        
+        // Sauvegarder les votes
+        function saveVotes() {
+            localStorage.setItem('btc_poll_votes', JSON.stringify(votes));
+        }
+        
+        // Fonction de vote
+        window.vote = function(choice) {
+            // Vérifier si l'utilisateur a déjà voté
+            if (localStorage.getItem('btc_poll_voted')) {
+                alert('You already voted! 🗳️');
+                showResults();
+                return;
+            }
+            
+            // Enregistrer le vote
+            votes[choice]++;
+            localStorage.setItem('btc_poll_voted', choice);
+            saveVotes();
+            
+            // Afficher les résultats
+            showResults();
+            
+            // Haptic feedback si disponible
+            if (sdk.context?.features?.haptics) {
+                try {
+                    sdk.actions.triggerHapticFeedback({ type: 'success' });
+                } catch (e) {
+                    console.log('Haptic feedback not available');
+                }
+            }
+        };
+        
+        // Afficher les résultats
+        function showResults() {
+            const total = votes.bear + votes.bull;
+            const bearPercent = total > 0 ? Math.round((votes.bear / total) * 100) : 0;
+            const bullPercent = total > 0 ? Math.round((votes.bull / total) * 100) : 0;
+            
+            document.getElementById('results').classList.add('show');
+            document.getElementById('voteButtons').style.display = 'none';
+            
+            // Animer les barres
+            setTimeout(() => {
+                document.getElementById('bearBar').style.width = bearPercent + '%';
+                document.getElementById('bullBar').style.width = bullPercent + '%';
+                
+                document.getElementById('bearPercent').textContent = bearPercent + '%';
+                document.getElementById('bullPercent').textContent = bullPercent + '%';
+                
+                document.getElementById('bearVotes').textContent = votes.bear + ' votes';
+                document.getElementById('bullVotes').textContent = votes.bull + ' votes';
+                
+                document.getElementById('totalVotes').textContent = 'Total: ' + total + ' votes';
+            }, 100);
+        }
+        
+        // Initialisation de la Mini App
+        async function initMiniApp() {
+            try {
+                console.log('Initializing Farcaster Mini App...');
+                
+                // Charger les votes
+                loadVotes();
+                
+                // Récupérer le contexte utilisateur
+                if (sdk.context?.user) {
+                    const user = sdk.context.user;
+                    console.log('User context:', user);
+                    
+                    // Afficher les infos utilisateur
+                    if (user.displayName || user.username) {
+                        const userInfoEl = document.getElementById('userInfo');
+                        const userNameEl = document.getElementById('userName');
+                        const userAvatarEl = document.getElementById('userAvatar');
+                        
+                        userNameEl.textContent = user.displayName || `@${user.username}`;
+                        if (user.pfpUrl) {
+                            userAvatarEl.src = user.pfpUrl;
+                        }
+                        userInfoEl.style.display = 'flex';
+                    }
+                }
+                
+                // Vérifier si l'utilisateur a déjà voté
+                if (localStorage.getItem('btc_poll_voted')) {
+                    showResults();
+                }
+                
+                // Signaler que l'app est prête
+                await sdk.actions.ready();
+                console.log('Mini App ready!');
+                
+            } catch (error) {
+                console.error('Error initializing Mini App:', error);
+                // Si le SDK n'est pas disponible, continuer quand même
+                loadVotes();
+                if (localStorage.getItem('btc_poll_voted')) {
+                    showResults();
+                }
+            }
+        }
+        
+        // Démarrer l'app
+        initMiniApp();
+        
+    </script>
+</body>
+</html>
