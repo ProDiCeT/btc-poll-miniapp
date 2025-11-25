@@ -1,0 +1,21 @@
+{
+  "frame": {
+    "name": "BTC Market Sentiment",
+    "homeUrl": "https://btc-poll-miniapp-test.vercel.app",
+    "iconUrl": "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+    "version": "1",
+    "imageUrl": "https://btc-poll-miniapp-test.vercel.app/image.png",
+    "subtitle": "Vote and share",
+    "webhookUrl": "https://btc-poll-miniapp-test.vercel.app/api/webhook",
+    "buttonTitle": "Vote Now 🗳️",
+    "description": "Vote on Bitcoin market sentiment - Bear or Bull?",
+    "splashImageUrl": "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+    "primaryCategory": "social",
+    "splashBackgroundColor": "#1a1a2e"
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjE0Mzg2MTQsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHhGMDZlODc2RTgyMThFNTdjNzA2ZWRFQjJEMUU0OEQzQjIzMjRmMjBEIn0",
+    "payload": "eyJkb21haW4iOiJidGMtcG9sbC1taW5pYXBwLXRlc3QudmVyY2VsLmFwcCJ9",
+    "signature": "6LUPInpIqwF467gKvd/OVa57XMWmnCv9r7FupChqO9sE2OPCQk7K2WUj3iD52mduQwNDEqkFcCgcp99qFjFcxBs="
+  }
+}
